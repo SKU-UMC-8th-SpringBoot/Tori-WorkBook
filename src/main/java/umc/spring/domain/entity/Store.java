@@ -1,5 +1,6 @@
 package umc.spring.domain.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,6 +8,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +21,7 @@ import umc.spring.domain.common.BaseEntity;
 @Entity
 @Getter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Store extends BaseEntity {
 
@@ -36,4 +41,20 @@ public class Store extends BaseEntity {
   @JoinColumn(name = "region_id")
   private Region region;
 
+  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+  private List<Mission> missionList = new ArrayList<>();
+
+  @OneToMany(mappedBy = "store", cascade = CascadeType.ALL)
+  private List<Review> reviewList = new ArrayList<>();
+
+  @Override
+  public String toString() {
+    return "Store{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", address='" + address + '\'' +
+        ", score=" + score +
+        ", region=" + (region != null ? region.getName() : "N/A") + // region의 이름 출력
+        '}';
+  }
 }
